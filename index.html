@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devomex | Security Gateway</title>
+    <style>
+        /* Genel Tema Ayarları - Hacker Konsepti */
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* ŞİFRE GİRİŞ EKRANI TASARIMI */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .login-box {
+            background: #161b22;
+            padding: 40px;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 153, 0.1);
+        }
+
+        .login-box h1 {
+            color: #00ff99; /* Neon Yeşili */
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .login-box p {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        input[type="password"] {
+            background: #0d1117;
+            border: 1px solid #00ff99;
+            color: #00ff99;
+            padding: 10px;
+            width: 80%;
+            font-size: 16px;
+            border-radius: 5px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        input[type="password"]:focus {
+            box-shadow: 0 0 10px rgba(0, 255, 153, 0.5);
+        }
+
+        button {
+            background: #00ff99;
+            color: #0d1117;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: #00cc7a;
+            box-shadow: 0 0 15px #00ff99;
+        }
+
+        #error-msg {
+            color: #ff4d4d;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* ANA SAYFA (YÖNETİM PANELİ) TASARIMI */
+        #main-dashboard {
+            display: none; /* Başlangıçta gizli */
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px 0;
+        }
+
+        header {
+            border-bottom: 2px solid #00ff99;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #00ff99;
+            font-size: 36px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        /* Siber Güvenlik Bilgi Alanı */
+        .info-section {
+            background: #161b22;
+            border-left: 5px solid #00ff99;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-section h2 {
+            color: #58a6ff; /* Mavi detay */
+            margin-top: 0;
+        }
+
+        .info-section ul {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        /* Eğitim Videoları Alanı (Grid Sistemi) */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .video-card:hover {
+            border-color: #00ff99;
+            transform: translateY(-5px);
+        }
+
+        .video-card h3 {
+            color: #c9d1d9;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #30363d;
+            padding-bottom: 10px;
+        }
+
+        /* Video placeholder alanı */
+        .video-placeholder {
+            width: 100%;
+            height: 180px;
+            background: #0d1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #8b949e;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* İçine video eklediğinde tam sığması için */
+        iframe {
+            width: 100%;
+            height: 180px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. GİRİŞ (ŞİFRE) EKRANI -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>DEVOMEX</h1>
+            <p>Sisteme erişmek için verilen şifreyi giriniz.</p>
+            <input type="password" id="passInput" placeholder="Şifreniz..." onkeypress="if(event.keyCode==13) girisYap()">
+            <br>
+            <button onclick="girisYap()">Sisteme Gir</button>
+            <p id="error-msg">Erişim Reddedildi! Hatalı Şifre.</p>
+        </div>
+    </div>
+
+    <!-- 2. GİZLİ ANA EKRAN (EĞİTİM PANELİ) -->
+    <div id="main-dashboard">
+        <header>
+            <h1>DEVOMEX SECURITY PANEL</h1>
+            <p>Hoş Geldin. Sistem Güvenli.</p>
+        </header>
+
+        <!-- Siber Güvenlik Bilgileri -->
+        <div class="info-section">
+            <h2><span style="color:#00ff99;">[ > ]</span> Temel Siber Güvenlik Protokolleri</h2>
+            <ul>
+                <li><strong>Parola Güvenliği:</strong> Her platform için benzersiz, karmaşık (Büyük/küçük harf, rakam, sembol) parolalar kullanın.</li>
+                <li><strong>Çift Aşamalı Doğrulama (2FA):</strong> Tüm kritik hesaplarınızda SMS veya Authenticator uygulamaları ile 2FA'yı aktif edin.</li>
+                <li><strong>Oltalama (Phishing) Farkındalığı:</strong> Kaynağını bilmediğiniz SMS ve e-postalardaki linklere kesinlikle tıklamayın.</li>
+                <li><strong>Güncellemeler:</strong> İşletim sistemi ve uygulamalarınızı daima en güncel sürümde tutun (Zafiyetleri kapatmak için).</li>
+                <li><strong>Halka Açık Ağlar:</strong> Şifresiz ortak Wi-Fi ağlarında asla bankacılık işlemleri yapmayın, mutlaka VPN kullanın.</li>
+            </ul>
+        </div>
+
+        <!-- Eğitim Videoları Alanı -->
+        <h2 style="color: #00ff99; border-bottom: 1px solid #30363d; padding-bottom: 10px;">[ EĞİTİM MODÜLLERİ ]</h2>
+        <div class="video-grid" id="videoContainer">
+            <!-- Videolar Javascript ile aşağıda otomatik oluşturulacak -->
+        </div>
+
+    </div>
+
+    <!-- SİSTEMİN ÇALIŞMA MANTIĞI (JAVASCRIPT) -->
+    <script>
+        // Şifre Kontrol Sistemi
+        function girisYap() {
+            var girilenSifre = document.getElementById("passInput").value;
+            var hataMesaji = document.getElementById("error-msg");
+            
+            if (girilenSifre === "dewomex") {
+                // Şifre doğruysa giriş ekranını gizle, paneli aç
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-dashboard").style.display = "block";
+            } else {
+                // Şifre yanlışsa hata ver
+                hataMesaji.style.display = "block";
+            }
+        }
+
+        // 15 Adet Video Kutusunu Otomatik Oluşturma
+        var videoAlani = document.getElementById("videoContainer");
+        
+        for (var i = 1; i <= 15; i++) {
+            // Her video için bir kart (kutu) oluşturuluyor
+            var kart = document.createElement("div");
+            kart.className = "video-card";
+            
+            // Kartın içindeki HTML yapısı
+            kart.innerHTML = `
+                <h3>Eğitim Bölüm ${i}</h3>
+                <div class="video-placeholder">
+                    <!-- İLERİDE VİDEOYU BURAYA EKLEYECEKSİN -->
+                    Video ${i} Bekleniyor...
+                </div>
+            `;
+            
+            videoAlani.appendChild(kart);
+        }
+    </script>
+
+</body>
+</html>
